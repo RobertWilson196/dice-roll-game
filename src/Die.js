@@ -16,7 +16,7 @@ class Die extends Component {
   }
     render(){
         return(
-            <div> 
+            <div className="die"> 
                 <h1>{this.state.diceValue}</h1>
                 <button onClick={() => this.diceRoll()}>Roll Dice</button>
             </div>

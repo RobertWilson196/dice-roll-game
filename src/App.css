@@ -5,12 +5,16 @@
 }
 
 .die {
-  width: 100px;
-  height: 100px;
-  background-color: blue;
-  border-color: red;
+  width: 80px;
+  height: 80px;
+  background-color: black;
+  color:white;
+  border-color: white;
   border-width: 1px;
   border-style: solid;
+  text-align: center;
+  align-content: left;
+  margin: 0 10px 10px 0
 }
 
 .App {
