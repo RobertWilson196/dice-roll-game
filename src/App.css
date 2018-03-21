@@ -1,3 +1,18 @@
+.flex-container {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: center;
+}
+
+.die {
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  border-color: red;
+  border-width: 1px;
+  border-style: solid;
+}
+
 .App {
   text-align: center;
 }
