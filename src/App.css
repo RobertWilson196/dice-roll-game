@@ -1,6 +1,11 @@
-.flex-container {
+.flex-container-h {
   display: flex;
   flex-direction: horizontal;
+  justify-content: center;
+}
+.flex-container-v {
+  display: flex;
+  flex-direction: vertical;
   justify-content: center;
 }
 

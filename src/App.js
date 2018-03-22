@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
+import Player from './Player';
 import Die from './Die';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <div className="flex-container">
+      <div className="flex-container-h">
+        <div className="flex-container-v">
+          {/* <Player /> */}
           <Die />
-          <Die />
+        </div>
+        <div className="flex-container-v">
+          {/* <Player /> */}
           <Die />
         </div>
       </div>
