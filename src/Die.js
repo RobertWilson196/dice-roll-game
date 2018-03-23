@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
 
 class Die extends Component {
-    constructor() {
+    constructor(){
         super();
         this.state = {
-            diceValue: 0
-        };
-        this.diceRoll = this.diceRoll.bind(this);
+            diceValue: 0,
+        }
     }
-
-  diceRoll(){
-    let rollValue = (Math.floor(Math.random() * 6)) + 1;
-    this.setState({diceValue: rollValue});
-    return rollValue;
-  }
     render(){
         return(
             <div className="die"> 
-                <h1>{this.state.diceValue}</h1>
-                <button onClick={() => this.diceRoll()}>Roll Dice</button>
+                <h1>{this.props.value}</h1>
             </div>
             );
     }
