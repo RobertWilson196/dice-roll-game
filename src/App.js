@@ -9,6 +9,7 @@ class App extends Component {
     super();
     this.state = {     
 
+      renderControl: playerTurnNeutral,
       turn: "Human",
       //player data
       player : {
@@ -34,6 +35,13 @@ class App extends Component {
     this.rollDice = this.rollDice.bind(this);
     this.attacks = this.attacks.bind(this);
     this.changeTurn = this.changeTurn.bind(this);
+
+    const playerTurnNeutral = "playerTurnNeutral";
+    const playerTurnAttackRoll = "playerTurnAttackRoll";
+    const playerTurnDefendRoll = "playerTurnDefendRoll";
+    const cpuTurnNeutral = "cpuTurnNeutral";
+    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
+    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
 }
 
   rollDice() { //hardcoded to a d6
@@ -91,6 +99,7 @@ class App extends Component {
     this.setState({
       player: newPlayerState,
       cpu: newCpuState,
+      diceValue: rollValue,
     });
   };
 
@@ -99,11 +108,8 @@ class App extends Component {
       <div className="flex-container-h">
         <Player value = {this.state.player}/>
         <Player value = {this.state.cpu} />
-        <Die value = {this.state.diceOneValue}/>
-        <button onClick={() => 
-            this.setState({ 
-              diceOneValue: this.rollDice()
-            })}>Roll</button>
+        <Die value = {this.state.diceValue}/>
+
         <button onClick ={ () => {
           this.attacks( (this.state.turn === 'Human' ? this.state.player : this.state.cpu),
           (this.state.turn === 'Human' ? this.state.cpu : this.state.player));
