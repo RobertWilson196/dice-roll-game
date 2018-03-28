@@ -9,7 +9,7 @@ class App extends Component {
     super();
     this.state = {     
 
-      renderControl: playerTurnNeutral,
+      renderControl: 'playerTurnAttackRoll',
       turn: "Human",
       //player data
       player : {
@@ -32,16 +32,10 @@ class App extends Component {
         isAlive: true,
     }
   };
+
     this.rollDice = this.rollDice.bind(this);
     this.attacks = this.attacks.bind(this);
     this.changeTurn = this.changeTurn.bind(this);
-
-    const playerTurnNeutral = "playerTurnNeutral";
-    const playerTurnAttackRoll = "playerTurnAttackRoll";
-    const playerTurnDefendRoll = "playerTurnDefendRoll";
-    const cpuTurnNeutral = "cpuTurnNeutral";
-    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
-    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
 }
 
   rollDice() { //hardcoded to a d6
@@ -50,7 +44,6 @@ class App extends Component {
   };
 
   changeTurn() {
-    console.log(this.state.turn);
     if(this.state.turn === "Human") {
       this.setState({
         turn: "CPU",
@@ -104,19 +97,88 @@ class App extends Component {
   };
 
   render() {
-    return (
-      <div className="flex-container-h">
-        <Player value = {this.state.player}/>
-        <Player value = {this.state.cpu} />
-        <Die value = {this.state.diceValue}/>
 
-        <button onClick ={ () => {
-          this.attacks( (this.state.turn === 'Human' ? this.state.player : this.state.cpu),
-          (this.state.turn === 'Human' ? this.state.cpu : this.state.player));
-        } }>attack</button>
-        <button onClick={this.changeTurn}>change turn</button>
-      </div>
-    );
+    const playerTurnAttackRoll = "playerTurnAttackRoll";
+    const playerTurnDefendRoll = "playerTurnDefendRoll";
+    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
+    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
+    
+    switch(this.state.renderControl) {
+
+      // ... player (a) -> cpu (d) -> cpu (a) -> player (d) -> player (a) ...
+
+      case playerTurnAttackRoll: {
+        return (
+          <div className="flex-container-h">
+            <Player value = {this.state.player}/>
+            <Player value = {this.state.cpu} />
+            <Die value = {this.state.diceValue}/>
+            <h1>{this.state.renderControl}</h1>
+            <button onClick={ () => this.setState({
+              renderControl: 'cpuTurnDefendRoll',
+            }) }>Attack CPU</button>
+          </div>
+        );
+      }
+
+      case cpuTurnDefendRoll: {
+        return (
+          <div className="flex-container-h">
+            <Player value = {this.state.player}/>
+            <Player value = {this.state.cpu} />
+            <Die value = {this.state.diceValue}/>
+            <h1>{this.state.renderControl}</h1>
+            <button onClick={ () => this.setState({
+              renderControl: 'cpuTurnAttackRoll',
+            }) }>Block Player</button>
+            <button onClick={ () => this.setState({
+              renderControl: 'cpuTurnDefendRoll',
+            }) }>Evade Player</button>
+          </div>
+        );
+      }
+
+      case cpuTurnAttackRoll: {
+        return (
+          <div className="flex-container-h">
+            <Player value = {this.state.player}/>
+            <Player value = {this.state.cpu} />
+            <Die value = {this.state.diceValue}/>
+            <h1>{this.state.renderControl}</h1>
+            <button onClick={ () => this.setState({
+              renderControl: 'playerTurnDefendRoll',
+            }) }>Attack Player</button>
+          </div>
+        );
+      }
+
+      case playerTurnDefendRoll: {
+        return (
+          <div className="flex-container-h">
+            <Player value = {this.state.player}/>
+            <Player value = {this.state.cpu} />
+            <Die value = {this.state.diceValue}/>
+            <h1>{this.state.renderControl}</h1>
+            <button onClick={ () => this.setState({
+              renderControl: 'playerTurnAttackRoll',
+            }) }>Block CPU</button>
+            <button onClick={ () => this.setState({
+              renderControl: 'playerTurnAttackRoll',
+            }) }>Evade CPU</button>
+          </div>
+        );
+      }
+
+      default: 
+        return (
+          <div className="flex-container-h">
+            <Player value = {this.state.player}/>
+            <Player value = {this.state.cpu} />
+            <Die value = {this.state.diceValue}/>
+            <h1>default</h1>
+          </div>
+        );
+    }
   }
 }
 
