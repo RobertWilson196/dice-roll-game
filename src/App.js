@@ -115,8 +115,9 @@ class App extends Component {
             <Die value = {this.state.diceValue}/>
             <h1>{this.state.renderControl}</h1>
             <button onClick={ () => this.setState({
+              diceValue: this.rollDice(),  
               renderControl: 'cpuTurnDefendRoll',
-            }) }>Attack CPU</button>
+              }) }>Attack CPU</button>
           </div>
         );
       }
@@ -129,10 +130,12 @@ class App extends Component {
             <Die value = {this.state.diceValue}/>
             <h1>{this.state.renderControl}</h1>
             <button onClick={ () => this.setState({
+              diceValue: this.rollDice(), 
               renderControl: 'cpuTurnAttackRoll',
             }) }>Block Player</button>
             <button onClick={ () => this.setState({
-              renderControl: 'cpuTurnDefendRoll',
+              diceValue: this.rollDice(), 
+              renderControl: 'cpuTurnAttackRoll',
             }) }>Evade Player</button>
           </div>
         );
@@ -146,6 +149,7 @@ class App extends Component {
             <Die value = {this.state.diceValue}/>
             <h1>{this.state.renderControl}</h1>
             <button onClick={ () => this.setState({
+              diceValue: this.rollDice(), 
               renderControl: 'playerTurnDefendRoll',
             }) }>Attack Player</button>
           </div>
@@ -160,9 +164,11 @@ class App extends Component {
             <Die value = {this.state.diceValue}/>
             <h1>{this.state.renderControl}</h1>
             <button onClick={ () => this.setState({
+              diceValue: this.rollDice(), 
               renderControl: 'playerTurnAttackRoll',
             }) }>Block CPU</button>
             <button onClick={ () => this.setState({
+              diceValue: this.rollDice(), 
               renderControl: 'playerTurnAttackRoll',
             }) }>Evade CPU</button>
           </div>
