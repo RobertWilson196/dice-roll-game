@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Player from './Player';
 import Die from './Die';
-import CombatLog from './CombatLog';
+// import CombatLog from './CombatLog';
 import './App.css';
 
 class App extends Component {
@@ -59,12 +59,11 @@ class App extends Component {
 
   handleAttackRoll() {
 
-    const { player, cpu, renderControl } = this.state;
+    const { player, cpu } = this.state;
     const rollValue = this.rollDice();
 
     let newPlayerState = { ...player };
     let newCpuState = { ...cpu };
-    let newRender = renderControl;
 
     const playerTurnAttackRoll = "playerTurnAttackRoll";
     const cpuTurnAttackRoll = "cpuTurnAttackRoll";
@@ -91,7 +90,7 @@ class App extends Component {
         newCpuState = {
           ...cpu,
           attackValue: rollValue,
-        },
+        };
         this.setState({
           renderControl: playerTurnDefendRoll,
           cpuDice: rollValue,
@@ -114,12 +113,11 @@ class App extends Component {
 
   handleDefendRoll() {
 
-    const { player, cpu, renderControl } = this.state;
+    const { player, cpu } = this.state;
     const rollValue = this.rollDice();
 
     let newPlayerState = { ...player };
     let newCpuState = { ...cpu };
-    let newRender = renderControl;
 
     const playerTurnAttackRoll = "playerTurnAttackRoll";
     const cpuTurnAttackRoll = "cpuTurnAttackRoll";
@@ -129,10 +127,17 @@ class App extends Component {
     switch(this.state.renderControl) {
 
       case playerTurnDefendRoll: {
+        let newHealth = player.health;
+        let damageRoll = ((cpu.attackValue - rollValue > 1) ? (cpu.attackValue - rollValue) : 1);
+        newHealth -= damageRoll;
         newPlayerState = {
           ...player,
+          health: newHealth,
           defenseValue: rollValue,
-        },
+        };
+        let eventLog = ("CPU attacks with " + cpu.attackValue +
+        ". Player defends with " + rollValue + ". Player takes " + damageRoll + " damage.");
+        console.log(eventLog);
         this.setState({
           renderControl: playerTurnAttackRoll,
           playerDice: rollValue,
@@ -143,10 +148,17 @@ class App extends Component {
       }
 
       case cpuTurnDefendRoll: {
+        let newHealth = cpu.health;
+        let damageRoll = ((player.attackValue - rollValue > 1) ? (player.attackValue - rollValue) : 1);
+        newHealth -= damageRoll;
         newCpuState = {
           ...cpu,
+          health: newHealth,
           defenseValue: rollValue,
-        },
+        };
+        let eventLog = ("Player attacks with " + player.attackValue +
+        ". CPU defends with " + rollValue + ". CPU takes " + damageRoll + " damage.");
+        console.log(eventLog);
         this.setState({
           renderControl: cpuTurnAttackRoll,
           cpuDice: rollValue,
@@ -169,12 +181,11 @@ class App extends Component {
 
   handleEvadeRoll() {
 
-    const { player, cpu, renderControl } = this.state;
+    const { player, cpu, } = this.state;
     const rollValue = this.rollDice();
 
     let newPlayerState = { ...player };
     let newCpuState = { ...cpu };
-    let newRender = renderControl;
 
     const playerTurnAttackRoll = "playerTurnAttackRoll";
     const cpuTurnAttackRoll = "cpuTurnAttackRoll";
@@ -184,10 +195,20 @@ class App extends Component {
     switch(this.state.renderControl) {
 
       case playerTurnDefendRoll: {
+        let newHealth = player.health;
+        let damageRoll = 0;
+        if(cpu.attackValue > rollValue) {
+          newHealth = player.health - cpu.attackValue;
+          damageRoll = cpu.attackValue;
+        }
         newPlayerState = {
           ...player,
+          health: newHealth,
           defenseValue: rollValue,
-        },
+        };
+        let eventLog = ("CPU attacks with " + cpu.attackValue +
+        ". Player evades with " + rollValue + ". Player takes " + damageRoll + " damage.");
+        console.log(eventLog);
         this.setState({
           renderControl: playerTurnAttackRoll,
           playerDice: rollValue,
@@ -198,10 +219,20 @@ class App extends Component {
       }
 
       case cpuTurnDefendRoll: {
+        let newHealth = cpu.health;
+        let damageRoll = 0;
+        if(player.attackValue > rollValue) {
+          newHealth = cpu.health - player.attackValue;
+          damageRoll = player.attackValue;
+        }
         newCpuState = {
           ...cpu,
+          health: newHealth,
           defenseValue: rollValue,
-        },
+        };
+        let eventLog = ("Player attacks with " + player.attackValue +
+        ". CPU evades with " + rollValue + ". CPU takes " + damageRoll + " damage.");
+        console.log(eventLog);
         this.setState({
           renderControl: cpuTurnAttackRoll,
           cpuDice: rollValue,
@@ -236,7 +267,6 @@ class App extends Component {
       case playerTurnAttackRoll: {
         return (
           <div className="flex-container-h">
-            <h1>{this.state.renderControl}</h1>
             <Player value = {this.state.player}/>
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
@@ -250,7 +280,6 @@ class App extends Component {
       case cpuTurnDefendRoll: {
         return (
           <div className="flex-container-h">
-            <h1>{this.state.renderControl}</h1>
             <Player value = {this.state.player}/>
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
@@ -264,7 +293,6 @@ class App extends Component {
       case cpuTurnAttackRoll: {
         return (
           <div className="flex-container-h">
-            <h1>{this.state.renderControl}</h1>
             <Player value = {this.state.player}/>
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
@@ -277,7 +305,6 @@ class App extends Component {
       case playerTurnDefendRoll: {
         return (
           <div className="flex-container-h">
-            <h1>{this.state.renderControl}</h1>
             <Player value = {this.state.player}/>
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />

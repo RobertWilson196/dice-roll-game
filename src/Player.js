@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Die from './Die';
 
 class Player extends Component {
 
