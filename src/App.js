@@ -13,7 +13,6 @@ class App extends Component {
       cpuDice: 0,
       renderControl: 'playerTurnAttackRoll',
       newRender: '',
-      turn: "Human",
       //player data
       player : {
         player: "Human",
@@ -33,7 +32,6 @@ class App extends Component {
   };
 
     this.rollDice = this.rollDice.bind(this);
-    this.changeTurn = this.changeTurn.bind(this);
     this.handleAttackRoll = this.handleAttackRoll.bind(this);
     this.handleDefendRoll = this.handleDefendRoll.bind(this);
     this.handleEvadeRoll = this.handleEvadeRoll.bind(this);
@@ -45,70 +43,19 @@ class App extends Component {
     return rollValue;
   };
 
-  changeTurn() {
-    if(this.state.turn === "Human") {
-      this.setState({
-        turn: "CPU",
-      });
-    } else if (this.state.turn === "CPU") {
-      this.setState({
-        turn: "Human",
-      });
-    };
-  };
 
-  handleAttackRoll() {
+  handleAttackRoll(char) {
 
-    const { player, cpu } = this.state;
+    const player = this.state[char];
     const rollValue = this.rollDice();
-
-    let newPlayerState = { ...player };
-    let newCpuState = { ...cpu };
-
-    const playerTurnAttackRoll = "playerTurnAttackRoll";
-    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
-    const playerTurnDefendRoll = "playerTurnDefendRoll";
-    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
-
-    switch(this.state.renderControl) {
-
-      case playerTurnAttackRoll: {
-        newPlayerState = {
-          ...player,
-          attackValue: rollValue,
-        };
-        this.setState({
-          renderControl: cpuTurnDefendRoll,
-          playerDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      } 
-      
-      case cpuTurnAttackRoll: {
-        newCpuState = {
-          ...cpu,
-          attackValue: rollValue,
-        };
-        this.setState({
-          renderControl: playerTurnDefendRoll,
-          cpuDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      }
-
-      default: {
-        this.setState({ 
-          diceValue: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        console.log('error');
-      }
-    }
+    this.setState({
+      renderControl: char==="player" ? "cpuTurnDefendRoll": "playerTurnDefendRoll",
+      [char+"Dice"]: rollValue,
+      [char]:{
+        ...player,
+        attackValue: rollValue,
+      },
+    });
   }
 
   handleDefendRoll() {
@@ -169,11 +116,7 @@ class App extends Component {
       }
 
       default: {
-        this.setState({ 
-          diceValue: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
+      
         console.log('error');
      }
     }
@@ -243,11 +186,7 @@ class App extends Component {
       }
 
       default: {
-        this.setState({ 
-          diceValue: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
+        
         console.log('error');
      }
     }
@@ -272,7 +211,7 @@ class App extends Component {
             <Player value = {this.state.cpu} />
             <Die value = {this.state.cpuDice}/>
             
-            <button onClick={this.handleAttackRoll}>Attack CPU</button>
+            <button onClick={() => this.handleAttackRoll('player')}>Attack CPU</button>
           </div>
         );
       }
@@ -297,7 +236,7 @@ class App extends Component {
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
             <Die value = {this.state.cpuDice}/>
-            <button onClick={this.handleAttackRoll}>Attack Player</button>
+            <button onClick={() => this.handleAttackRoll('cpu')}>Attack Player</button>
           </div>
         );
       }
