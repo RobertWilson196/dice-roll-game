@@ -46,80 +46,48 @@ class App extends Component {
 
   handleAttackRoll(char) {
 
-    const player = this.state[char];
+    const attacker = this.state[char];
     const rollValue = this.rollDice();
     this.setState({
       renderControl: char==="player" ? "cpuTurnDefendRoll": "playerTurnDefendRoll",
       [char+"Dice"]: rollValue,
-      [char]:{
-        ...player,
+      [char]: {
+        ...attacker,
         attackValue: rollValue,
       },
     });
   }
 
-  handleDefendRoll() {
+  handleDefendRoll(char) {
 
     const { player, cpu } = this.state;
+    const defender = this.state[char];
     const rollValue = this.rollDice();
+    let damageRoll = 0;
+    let eventLog = '';
 
-    let newPlayerState = { ...player };
-    let newCpuState = { ...cpu };
-
-    const playerTurnAttackRoll = "playerTurnAttackRoll";
-    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
-    const playerTurnDefendRoll = "playerTurnDefendRoll";
-    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
-
-    switch(this.state.renderControl) {
-
-      case playerTurnDefendRoll: {
-        let newHealth = player.health;
-        let damageRoll = ((cpu.attackValue - rollValue > 1) ? (cpu.attackValue - rollValue) : 1);
-        newHealth -= damageRoll;
-        newPlayerState = {
-          ...player,
-          health: newHealth,
-          defenseValue: rollValue,
-        };
-        let eventLog = ("CPU attacks with " + cpu.attackValue +
-        ". Player defends with " + rollValue + ". Player takes " + damageRoll + " damage.");
-        console.log(eventLog);
-        this.setState({
-          renderControl: playerTurnAttackRoll,
-          playerDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      }
-
-      case cpuTurnDefendRoll: {
-        let newHealth = cpu.health;
-        let damageRoll = ((player.attackValue - rollValue > 1) ? (player.attackValue - rollValue) : 1);
-        newHealth -= damageRoll;
-        newCpuState = {
-          ...cpu,
-          health: newHealth,
-          defenseValue: rollValue,
-        };
-        let eventLog = ("Player attacks with " + player.attackValue +
-        ". CPU defends with " + rollValue + ". CPU takes " + damageRoll + " damage.");
-        console.log(eventLog);
-        this.setState({
-          renderControl: cpuTurnAttackRoll,
-          cpuDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      }
-
-      default: {
+    if(char==="player") {
+      damageRoll = ((cpu.attackValue - rollValue > 1) ? (cpu.attackValue - rollValue) : 1);
+      eventLog = ("CPU attacks with " + cpu.attackValue +
+      ". Player defends with " + rollValue + ". Player takes " + damageRoll + " damage.");
       
-        console.log('error');
-     }
+    } else {
+      damageRoll = ((player.attackValue - rollValue > 1) ? (player.attackValue - rollValue) : 1);
+      eventLog = ("Player attacks with " + player.attackValue +
+    ". CPU defends with " + rollValue + ". CPU takes " + damageRoll + " damage.");
     }
+
+    this.setState({
+      renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
+      [char+"Dice"]: rollValue,
+      [char]: {
+        ...defender,
+        defenseValue: rollValue,
+        health: defender.health - damageRoll,
+      },
+    });
+
+    console.log(eventLog);
   }
 
   handleEvadeRoll() {
@@ -223,8 +191,8 @@ class App extends Component {
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
             <Die value = {this.state.cpuDice}/>
-            <button onClick={this.handleDefendRoll}>Block Player</button>
-            <button onClick={this.handleEvadeRoll}>Evade Player</button>
+            <button onClick={() => this.handleDefendRoll('cpu')}>Block Player</button>
+            <button onClick={() => this.handleEvadeRoll('cpu')}>Evade Player</button>
           </div>
         );
       }
@@ -248,8 +216,8 @@ class App extends Component {
             <Die value = {this.state.playerDice}/>
             <Player value = {this.state.cpu} />
             <Die value = {this.state.cpuDice}/>
-            <button onClick={this.handleDefendRoll}>Block CPU</button>
-            <button onClick={this.handleEvadeRoll}>Evade CPU</button>
+            <button onClick={() => this.handleDefendRoll('player')}>Block CPU</button>
+            <button onClick={() => this.handleEvadeRoll('player')}>Evade CPU</button>
           </div>
         );
       }
