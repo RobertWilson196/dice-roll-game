@@ -97,12 +97,11 @@ class App extends Component {
     let eventLog = '';
 
     if(char==="player") {
-      damageRoll = ((cpu.attackValue - rollValue > 0) ? (cpu.attackValue) : 0);
+      damageRoll = (rollValue > cpu.attackValue ? 0 : cpu.attackValue);
       eventLog = ("CPU attacks with " + cpu.attackValue +
       ". Player evades with " + rollValue + ". Player takes " + damageRoll + " damage.");
-      
     } else {
-      damageRoll = ((player.attackValue - rollValue > 0) ? (player.attackValue) : 0);
+      damageRoll = (rollValue > player.attackValue ? 0 : player.attackValue);
       eventLog = ("Player attacks with " + player.attackValue +
     ". CPU evades with " + rollValue + ". CPU takes " + damageRoll + " damage.");
     }
@@ -116,6 +115,7 @@ class App extends Component {
         health: defender.health - damageRoll,
       },
     });
+
     console.log(eventLog);
   }
 
