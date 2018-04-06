@@ -132,58 +132,73 @@ class App extends Component {
 
       case playerTurnAttackRoll: {
         return (
-          <div className="flex-container-h">
-            <Player value = {this.state.player}/>
-            <Die value = {this.state.playerDice}/>
-            <Player value = {this.state.cpu} />
-            <Die value = {this.state.cpuDice}/>
-            
-            <button onClick={() => this.handleAttackRoll('player')}>Attack CPU</button>
+          <div>
+            <div className="flex-container-h">
+              <Player value = {this.state.player}/>
+              <Die value = {this.state.playerDice}/>
+              <Player value = {this.state.cpu} />
+              <Die value = {this.state.cpuDice}/>
+            </div>
+            <div className="flex-container-h">
+              <button onClick={() => this.handleAttackRoll('player')}>Attack CPU</button>
+            </div>
           </div>
         );
       }
 
       case cpuTurnDefendRoll: {
         return (
-          <div className="flex-container-h">
-            <Player value = {this.state.player}/>
-            <Die value = {this.state.playerDice}/>
-            <Player value = {this.state.cpu} />
-            <Die value = {this.state.cpuDice}/>
-            <button onClick={() => this.handleDefendRoll('cpu')}>Block Player</button>
-            <button onClick={() => this.handleEvadeRoll('cpu')}>Evade Player</button>
+          <div>
+            <div className="flex-container-h">
+              <Player value = {this.state.player}/>
+              <Die value = {this.state.playerDice}/>
+              <Player value = {this.state.cpu} />
+              <Die value = {this.state.cpuDice}/>
+            </div>
+            <div className="flex-container-h">
+              <button onClick={() => this.handleDefendRoll('cpu')}>Block Player</button>
+              <button onClick={() => this.handleEvadeRoll('cpu')}>Evade Player</button>
+            </div>
           </div>
         );
       }
 
       case cpuTurnAttackRoll: {
         return (
-          <div className="flex-container-h">
-            <Player value = {this.state.player}/>
-            <Die value = {this.state.playerDice}/>
-            <Player value = {this.state.cpu} />
-            <Die value = {this.state.cpuDice}/>
-            <button onClick={() => this.handleAttackRoll('cpu')}>Attack Player</button>
+          <div>
+            <div className="flex-container-h">
+              <Player value = {this.state.player}/>
+              <Die value = {this.state.playerDice}/>
+              <Player value = {this.state.cpu} />
+              <Die value = {this.state.cpuDice}/>
+            </div>
+            <div className="flex-container-h">
+              <button onClick={() => this.handleAttackRoll('cpu')}>Attack Player</button>
+            </div>
           </div>
         );
       }
 
       case playerTurnDefendRoll: {
         return (
-          <div className="flex-container-h">
-            <Player value = {this.state.player}/>
-            <Die value = {this.state.playerDice}/>
-            <Player value = {this.state.cpu} />
-            <Die value = {this.state.cpuDice}/>
-            <button onClick={() => this.handleDefendRoll('player')}>Block CPU</button>
-            <button onClick={() => this.handleEvadeRoll('player')}>Evade CPU</button>
+          <div>
+            <div className="flex-container-h">
+              <Player value = {this.state.player}/>
+              <Die value = {this.state.playerDice}/>
+              <Player value = {this.state.cpu} />
+              <Die value = {this.state.cpuDice}/>
+            </div>
+            <div className="flex-container-h">
+              <button onClick={() => this.handleDefendRoll('player')}>Block CPU</button>
+              <button onClick={() => this.handleEvadeRoll('player')}>Evade CPU</button>
+            </div>
           </div>
         );
       }
 
       default: 
         return (
-          <div className="flex-container-h">
+          <div>
             <h1>Something Broke</h1>
           </div>
         );
