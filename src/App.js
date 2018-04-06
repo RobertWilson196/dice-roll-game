@@ -86,78 +86,37 @@ class App extends Component {
         health: defender.health - damageRoll,
       },
     });
-
     console.log(eventLog);
   }
 
-  handleEvadeRoll() {
-
-    const { player, cpu, } = this.state;
+  handleEvadeRoll(char) {
+    const { player, cpu } = this.state;
+    const defender = this.state[char];
     const rollValue = this.rollDice();
+    let damageRoll = 0;
+    let eventLog = '';
 
-    let newPlayerState = { ...player };
-    let newCpuState = { ...cpu };
-
-    const playerTurnAttackRoll = "playerTurnAttackRoll";
-    const cpuTurnAttackRoll = "cpuTurnAttackRoll";
-    const playerTurnDefendRoll = "playerTurnDefendRoll";
-    const cpuTurnDefendRoll = "cpuTurnDefendRoll";
-
-    switch(this.state.renderControl) {
-
-      case playerTurnDefendRoll: {
-        let newHealth = player.health;
-        let damageRoll = 0;
-        if(cpu.attackValue > rollValue) {
-          newHealth = player.health - cpu.attackValue;
-          damageRoll = cpu.attackValue;
-        }
-        newPlayerState = {
-          ...player,
-          health: newHealth,
-          defenseValue: rollValue,
-        };
-        let eventLog = ("CPU attacks with " + cpu.attackValue +
-        ". Player evades with " + rollValue + ". Player takes " + damageRoll + " damage.");
-        console.log(eventLog);
-        this.setState({
-          renderControl: playerTurnAttackRoll,
-          playerDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      }
-
-      case cpuTurnDefendRoll: {
-        let newHealth = cpu.health;
-        let damageRoll = 0;
-        if(player.attackValue > rollValue) {
-          newHealth = cpu.health - player.attackValue;
-          damageRoll = player.attackValue;
-        }
-        newCpuState = {
-          ...cpu,
-          health: newHealth,
-          defenseValue: rollValue,
-        };
-        let eventLog = ("Player attacks with " + player.attackValue +
-        ". CPU evades with " + rollValue + ". CPU takes " + damageRoll + " damage.");
-        console.log(eventLog);
-        this.setState({
-          renderControl: cpuTurnAttackRoll,
-          cpuDice: rollValue,
-          player: newPlayerState,
-          cpu: newCpuState,
-        });
-        break;
-      }
-
-      default: {
-        
-        console.log('error');
-     }
+    if(char==="player") {
+      damageRoll = ((cpu.attackValue - rollValue > 0) ? (cpu.attackValue) : 0);
+      eventLog = ("CPU attacks with " + cpu.attackValue +
+      ". Player evades with " + rollValue + ". Player takes " + damageRoll + " damage.");
+      
+    } else {
+      damageRoll = ((player.attackValue - rollValue > 0) ? (player.attackValue) : 0);
+      eventLog = ("Player attacks with " + player.attackValue +
+    ". CPU evades with " + rollValue + ". CPU takes " + damageRoll + " damage.");
     }
+
+    this.setState({
+      renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
+      [char+"Dice"]: rollValue,
+      [char]: {
+        ...defender,
+        defenseValue: rollValue,
+        health: defender.health - damageRoll,
+      },
+    });
+    console.log(eventLog);
   }
 
   render() {
