@@ -12,7 +12,7 @@ class App extends Component {
       playerDice: 0,
       cpuDice: 0,
       renderControl: 'playerTurnAttackRoll',
-      newRender: '',
+      winner: '',
       //player data
       player : {
         player: "Human",
@@ -35,6 +35,7 @@ class App extends Component {
     this.handleAttackRoll = this.handleAttackRoll.bind(this);
     this.handleDefendRoll = this.handleDefendRoll.bind(this);
     this.handleEvadeRoll = this.handleEvadeRoll.bind(this);
+    this.reset = this.reset.bind(this);
     
 }
 
@@ -77,15 +78,30 @@ class App extends Component {
     ". CPU defends with " + rollValue + ". CPU takes " + damageRoll + " damage.");
     }
 
-    this.setState({
-      renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
-      [char+"Dice"]: rollValue,
-      [char]: {
-        ...defender,
-        defenseValue: rollValue,
-        health: defender.health - damageRoll,
-      },
-    });
+    let tempHealth = defender.health - damageRoll;
+    if(tempHealth <= 0) {
+      this.setState({
+        renderControl: 'endGame',
+        winner: char==="player" ? "CPU" : "Player",
+        [char+"Dice"]: rollValue,
+        [char]: {
+          ...defender,
+          defenseValue: rollValue,
+          health: defender.health - damageRoll,
+          isAlive: false,
+        },
+      });
+    } else { 
+      this.setState({
+        renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
+        [char+"Dice"]: rollValue,
+        [char]: {
+          ...defender,
+          defenseValue: rollValue,
+          health: defender.health - damageRoll,
+        },
+      });
+    }
     console.log(eventLog);
   }
 
@@ -106,17 +122,56 @@ class App extends Component {
     ". CPU evades with " + rollValue + ". CPU takes " + damageRoll + " damage.");
     }
 
-    this.setState({
-      renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
-      [char+"Dice"]: rollValue,
-      [char]: {
-        ...defender,
-        defenseValue: rollValue,
-        health: defender.health - damageRoll,
-      },
-    });
-
+    let tempHealth = defender.health - damageRoll;
+    if(tempHealth <= 0) {
+      this.setState({
+        renderControl: 'endGame',
+        winner: char==="player" ? "CPU" : "Player",
+        [char+"Dice"]: rollValue,
+        [char]: {
+          ...defender,
+          defenseValue: rollValue,
+          health: defender.health - damageRoll,
+          isAlive: false,
+        },
+      });
+    } else { 
+      this.setState({
+        renderControl: char==="player" ? "playerTurnAttackRoll": "cpuTurnAttackRoll",
+        [char+"Dice"]: rollValue,
+        [char]: {
+          ...defender,
+          defenseValue: rollValue,
+          health: defender.health - damageRoll,
+        },
+      });
+    }
     console.log(eventLog);
+  }
+
+  reset() {
+    this.setState({
+      playerDice: 0,
+      cpuDice: 0,
+      renderControl: 'playerTurnAttackRoll',
+      winner: '',
+      //player data
+      player : {
+        player: "Human",
+        health: 15,
+        attackValue: 0,
+        defenseValue: 0,
+        isAlive: true,
+      },
+      //cpu data
+      cpu : {
+        player: "CPU",
+        health: 10,
+        attackValue: 0,
+        defenseValue: 0,
+        isAlive: true,
+      }
+    });
   }
 
   render() {
@@ -125,6 +180,7 @@ class App extends Component {
     const playerTurnDefendRoll = "playerTurnDefendRoll";
     const cpuTurnAttackRoll = "cpuTurnAttackRoll";
     const cpuTurnDefendRoll = "cpuTurnDefendRoll";
+    const endGame = "endGame";
 
     switch(this.state.renderControl) {
 
@@ -191,6 +247,24 @@ class App extends Component {
             <div className="flex-container-h">
               <button onClick={() => this.handleDefendRoll('player')}>Block CPU</button>
               <button onClick={() => this.handleEvadeRoll('player')}>Evade CPU</button>
+            </div>
+          </div>
+        );
+      }
+      case endGame: {
+        return (
+          <div>
+            <div className="flex-container-h">
+              <Player value = {this.state.player}/>
+              <Die value = {this.state.playerDice}/>
+              <Player value = {this.state.cpu} />
+              <Die value = {this.state.cpuDice}/>
+            </div>
+            <div className="flex-container-h">
+              <h3>Winner: {this.state.winner}</h3>
+              <div className="flex-container-h">
+                <button onClick={() => this.reset()}>Restart Game</button>
+              </div>
             </div>
           </div>
         );
